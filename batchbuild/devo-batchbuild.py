@@ -17,7 +17,8 @@ from runner import Runner
 
 USAGE = "%prog <project.yaml|module> [module1 [module2...]]"
 
-BBCONFIG_DIR = os.path.expanduser("~/.config/devo/bb")
+DEVO_OVERLAY_DIR = os.path.expanduser(os.environ.get("DEVO_OVERLAY_DIR", "~/.devo"))
+BBCONFIG_DIR = os.path.join(DEVO_OVERLAY_DIR, "bb")
 BASE_CONFIG_NAME = "_base.yaml"
 
 

@@ -63,12 +63,16 @@ class Module(object):
         if not os.path.exists(self.build_dir):
             self.configure()
         build = self.config.get("build", "make")
+        if not build:
+            return
         opts = self.config.get("build-options", "")
         extra_opts = self.config.get("build-extra-options", "")
         self.runner.run(self.build_dir, build + " " + opts + " " + extra_opts, env=self._getenv())
 
     def install(self):
         install = self.config.get("install", "make install")
+        if not install:
+            return
         opts = self.config.get("install-options", "")
         extra_opts = self.config.get("install-extra-options", "")
         self.runner.run(self.build_dir, install + " " + opts + " " + extra_opts, env=self._getenv())
