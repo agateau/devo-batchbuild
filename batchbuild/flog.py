@@ -18,7 +18,7 @@ def p(txt, *args):
     print txt % args
 
 def li(txt, *args):
-    print "•", txt % args
+    print txt % args
 
 def _heading(level, txt, *args):
     sys.stdout.write(colors.BOLD)
