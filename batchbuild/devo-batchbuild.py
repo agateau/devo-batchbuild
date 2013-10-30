@@ -142,6 +142,9 @@ def do_build(module_configs, log_dir, options):
         module = Module(config, runner)
 
         # update/checkout
+        if options.switch_branch and module.has_checkout():
+            module.switch_branch()
+
         if not options.no_src:
             try:
                 if module.has_checkout():
@@ -201,6 +204,10 @@ def main():
     parser.add_option("--refresh-build",
                       action="store_true", dest="refresh_build", default=False,
                       help="Delete build dir")
+
+    parser.add_option("--switch-branch",
+                      action="store_true", dest="switch_branch", default=False,
+                      help="Switch to the branch defined for a module before updating")
 
     parser.add_option("-l", "--list",
                       action="store_true", dest="list", default=False,

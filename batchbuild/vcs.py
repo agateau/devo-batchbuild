@@ -1,4 +1,9 @@
-class Svn(object):
+class BaseVcs(object):
+    def switch_branch(self):
+        pass
+
+
+class Svn(BaseVcs):
     def __init__(self, module):
         self.module = module
 
@@ -10,7 +15,7 @@ class Svn(object):
         self.module.runner.run(self.module.src_dir, "svn up --non-interactive")
 
 
-class Git(object):
+class Git(BaseVcs):
     def __init__(self, module):
         self.module = module
         self.url = self.module.url
@@ -25,6 +30,10 @@ class Git(object):
         cmd += " %s %s" % (self.url, self.module.name)
         self.module.runner.run(self.module.base_dir, cmd)
 
+    def switch_branch(self):
+        cmd = "git checkout " + self.branch
+        self.module.runner.run(self.module.src_dir, cmd)
+
     def update(self):
         self.module.runner.run(self.module.src_dir, "git pull --rebase")
         self.module.runner.run(self.module.src_dir, "git submodule update")
@@ -36,7 +45,7 @@ class KdeGit(Git):
         self.url = "kde:" + module.name
 
 
-class Bzr(object):
+class Bzr(BaseVcs):
     def __init__(self, module):
         self.module = module
 
@@ -48,7 +57,7 @@ class Bzr(object):
         self.module.runner.run(self.module.src_dir, "bzr up")
 
 
-class Hg(object):
+class Hg(BaseVcs):
     def __init__(self, module):
         self.module = module
 
@@ -60,7 +69,7 @@ class Hg(object):
         self.module.runner.run(self.module.src_dir, "hg pull")
 
 
-class PartialSvn(object):
+class PartialSvn(BaseVcs):
     def __init__(self, module, repo_dirs):
         self.module = module
         self.repo_dirs = repo_dirs

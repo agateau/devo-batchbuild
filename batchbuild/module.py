@@ -43,6 +43,9 @@ class Module(object):
     def checkout(self):
         self.vcs.checkout()
 
+    def switch_branch(self):
+        self.vcs.switch_branch()
+
     def update(self):
         self.vcs.update()
 
