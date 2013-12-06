@@ -31,7 +31,14 @@ class Git(BaseVcs):
         self.module.runner.run(self.module.base_dir, cmd)
 
     def switch_branch(self):
-        cmd = "git checkout " + self.branch
+        self.module.runner.run(self.module.src_dir, "git fetch")
+        # `git checkout -B <branch> origin/<branch>` switches to the branch if
+        # it exists, creates a tracking branch if it does not.
+        #
+        # This ensures a local tracking branch is created if it does not exist.
+        # This does not happen with `git checkout <branch>` when the repo has
+        # more than one remote with the same branch name.
+        cmd = "git checkout -B " + self.branch + " origin/" + self.branch
         self.module.runner.run(self.module.src_dir, cmd)
 
     def update(self):
