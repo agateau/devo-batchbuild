@@ -54,7 +54,7 @@ class Bzr(BaseVcs):
         self.module.runner.run(self.module.base_dir, cmd)
 
     def update(self):
-        self.module.runner.run(self.module.src_dir, "bzr up")
+        self.module.runner.run(self.module.src_dir, "bzr pull")
 
 
 class Hg(BaseVcs):
