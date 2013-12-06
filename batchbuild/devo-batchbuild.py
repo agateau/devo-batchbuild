@@ -263,9 +263,10 @@ def main():
             flog.li("%s: %s", name, msg)
             flog.li("%s: see %s", name, log_file_name)
 
-    if not result.vcs_fails and not result.build_fails:
-        flog.p("All modules updated and built successfully")
+    if result.vcs_fails or result.build_fails:
+        return 1
 
+    flog.p("All modules updated and built successfully")
     return 0
 
 
