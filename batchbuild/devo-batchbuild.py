@@ -114,21 +114,21 @@ def do_build(module_configs, log_dir, options):
         name = config.flat_get("name")
         assert name
         flog.h1(name)
+        module = Module(config)
         log_file_name = os.path.join(log_dir, name + ".log")
         log_file = open(log_file_name, "w")
         runner = Runner(log_file, options.verbose)
-        module = Module(config, runner)
 
         # update/checkout
         if options.switch_branch and module.has_checkout():
-            module.switch_branch()
+            module.switch_branch(runner)
 
         if not options.no_src:
             try:
                 if module.has_checkout():
-                    module.update()
+                    module.update(runner)
                 else:
-                    module.checkout()
+                    module.checkout(runner)
             except BatchBuildError, exc:
                 flog.error("%s failed to update/checkout: %s", name, exc)
                 flog.p("See %s", log_file_name)
@@ -142,9 +142,9 @@ def do_build(module_configs, log_dir, options):
             if not options.src_only:
                 if options.refresh_build:
                     module.refresh_build()
-                module.configure()
-                module.build()
-                module.install()
+                module.configure(runner)
+                module.build(runner)
+                module.install(runner)
                 nanotify.notify(name, "Build successfully", icon="dialog-ok")
         except BatchBuildError, exc:
             flog.error("%s failed to build: %s", name, exc)

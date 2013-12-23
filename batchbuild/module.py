@@ -5,9 +5,8 @@ import shutil
 import vcs
 
 class Module(object):
-    def __init__(self, config, runner):
+    def __init__(self, config):
         self.config = config
-        self.runner = runner
         self.name = self.config.flat_get("name")
         assert self.name is not None
 
@@ -41,29 +40,29 @@ class Module(object):
     def has_checkout(self):
         return os.path.exists(self.src_dir)
 
-    def checkout(self):
-        self.vcs.checkout()
+    def checkout(self, runner):
+        self.vcs.checkout(runner)
 
-    def switch_branch(self):
-        self.vcs.switch_branch()
+    def switch_branch(self, runner):
+        self.vcs.switch_branch(runner)
 
-    def update(self):
-        self.vcs.update()
+    def update(self, runner):
+        self.vcs.update(runner)
 
     def refresh_build(self):
         if os.path.exists(self.build_dir):
             logging.info("Removing dir '%s'" % self.build_dir)
             shutil.rmtree(self.build_dir)
 
-    def configure(self):
+    def configure(self, runner):
         if not os.path.exists(self.build_dir):
             os.makedirs(self.build_dir)
         configure = self.config.get("configure", "devo_cmake " + self.src_dir)
         opts = self.config.get("configure-options", "")
         extra_opts = self.config.get("configure-extra-options", "")
-        self.runner.run(self.build_dir, configure + " " + opts + " " + extra_opts, env=self._getenv())
+        runner.run(self.build_dir, configure + " " + opts + " " + extra_opts, env=self._getenv())
 
-    def build(self):
+    def build(self, runner):
         if not os.path.exists(self.build_dir):
             self.configure()
         build = self.config.get("build", "make")
@@ -71,15 +70,15 @@ class Module(object):
             return
         opts = self.config.get("build-options", "")
         extra_opts = self.config.get("build-extra-options", "")
-        self.runner.run(self.build_dir, build + " " + opts + " " + extra_opts, env=self._getenv())
+        runner.run(self.build_dir, build + " " + opts + " " + extra_opts, env=self._getenv())
 
-    def install(self):
+    def install(self, runner):
         install = self.config.get("install", "make install")
         if not install:
             return
         opts = self.config.get("install-options", "")
         extra_opts = self.config.get("install-extra-options", "")
-        self.runner.run(self.build_dir, install + " " + opts + " " + extra_opts, env=self._getenv())
+        runner.run(self.build_dir, install + " " + opts + " " + extra_opts, env=self._getenv())
 
     def _getenv(self):
         env = dict(os.environ)
