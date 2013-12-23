@@ -45,6 +45,22 @@ devo_setup ov1
 # Run
 $BB_CMD --src-only test_clone.yaml
 
+# Basic module
 assert [ -d $DEVO_SOURCE_BASE_DIR/foo ]
 assert [ -f $DEVO_SOURCE_BASE_DIR/foo/file1.c ]
 assert [ -f $DEVO_SOURCE_BASE_DIR/foo/file2.c ]
+
+# Update
+(
+    cd $REMOTE_DIR/foo.git
+    git rm file1.c
+    touch file3.c
+    git add file3.c
+    git commit -m 'Updated'
+)
+
+$BB_CMD --src-only test_clone.yaml
+assert [ -d $DEVO_SOURCE_BASE_DIR/foo ]
+assert [ ! -f $DEVO_SOURCE_BASE_DIR/foo/file1.c ]
+assert [ -f $DEVO_SOURCE_BASE_DIR/foo/file2.c ]
+assert [ -f $DEVO_SOURCE_BASE_DIR/foo/file3.c ]
