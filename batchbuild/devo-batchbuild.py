@@ -115,7 +115,7 @@ def do_build(module_configs, log_dir, options):
         assert name
         flog.h1(name)
         module = Module(config)
-        log_file_name = os.path.join(log_dir, name + ".log")
+        log_file_name = os.path.join(log_dir, name.replace("/", "_") + ".log")
         log_file = open(log_file_name, "w")
         runner = Runner(log_file, options.verbose)
 

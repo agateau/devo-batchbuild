@@ -41,6 +41,8 @@ class Module(object):
         return os.path.exists(self.src_dir)
 
     def checkout(self, runner):
+        if not os.path.exists(self.base_dir):
+            os.makedirs(self.base_dir)
         self.vcs.checkout(runner)
 
     def switch_branch(self, runner):

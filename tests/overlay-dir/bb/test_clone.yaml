@@ -4,3 +4,5 @@ global:
 modules:
     - name: foo
       repo-url: $REMOTE_DIR/foo.git
+    - name: sub/foo
+      repo-url: $REMOTE_DIR/foo.git
