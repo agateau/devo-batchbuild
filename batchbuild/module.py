@@ -57,7 +57,7 @@ class Module(object):
     def configure(self):
         if not os.path.exists(self.build_dir):
             os.makedirs(self.build_dir)
-        configure = self.config.get("configure", "devo-cmake " + self.src_dir)
+        configure = self.config.get("configure", "devo_cmake " + self.src_dir)
         opts = self.config.get("configure-options", "")
         extra_opts = self.config.get("configure-extra-options", "")
         self.runner.run(self.build_dir, configure + " " + opts + " " + extra_opts, env=self._getenv())
