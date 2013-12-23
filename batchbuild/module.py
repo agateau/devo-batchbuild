@@ -21,7 +21,8 @@ class Module(object):
 
         self.branch = self.config.get("branch", "")
 
-        self.url = self.config.get("repo-url", "")
+        # Expanding vars is useful for tests
+        self.url = os.path.expandvars(self.config.get("repo-url", ""))
         if repo_type == "svn":
             self.vcs = vcs.Svn(self)
         elif repo_type == "partialsvn":
