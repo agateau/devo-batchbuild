@@ -1,12 +1,12 @@
 class BaseVcs(object):
+    def __init__(self, module):
+        self.module = module
+
     def switch_branch(self):
         pass
 
 
 class Svn(BaseVcs):
-    def __init__(self, module):
-        self.module = module
-
     def checkout(self):
         cmd = "svn checkout %s %s" % (self.module.url, self.module.name)
         self.module.runner.run(self.module.base_dir, cmd)
@@ -17,7 +17,7 @@ class Svn(BaseVcs):
 
 class Git(BaseVcs):
     def __init__(self, module):
-        self.module = module
+        BaseVcs.__init__(self, module)
         self.url = self.module.url
         self.branch = module.branch
         if self.branch == "":
@@ -53,9 +53,6 @@ class KdeGit(Git):
 
 
 class Bzr(BaseVcs):
-    def __init__(self, module):
-        self.module = module
-
     def checkout(self):
         cmd = "bzr branch %s %s" % (self.module.url, self.module.name)
         self.module.runner.run(self.module.base_dir, cmd)
@@ -65,9 +62,6 @@ class Bzr(BaseVcs):
 
 
 class Hg(BaseVcs):
-    def __init__(self, module):
-        self.module = module
-
     def checkout(self):
         cmd = "hg clone %s %s" % (self.module.url, self.module.name)
         self.module.runner.run(self.module.base_dir, cmd)
@@ -78,7 +72,7 @@ class Hg(BaseVcs):
 
 class PartialSvn(BaseVcs):
     def __init__(self, module, repo_dirs):
-        self.module = module
+        BaseVcs.__init__(self, module)
         self.repo_dirs = repo_dirs
 
     def checkout(self):
