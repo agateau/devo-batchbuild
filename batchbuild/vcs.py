@@ -1,3 +1,6 @@
+import os
+
+
 class BaseVcs(object):
     def __init__(self, module):
         self.module = module
@@ -55,7 +58,7 @@ class Git(BaseVcs):
 class KdeGit(Git):
     def __init__(self, module):
         Git.__init__(self, module)
-        self.url = "kde:" + module.name
+        self.url = "kde:" + os.path.basename(module.name)
 
 
 class Bzr(BaseVcs):
