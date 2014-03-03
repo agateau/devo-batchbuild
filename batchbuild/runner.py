@@ -37,18 +37,17 @@ class Runner(object):
     def run(self, cwd, command, env=None, report_progress=False):
         command = command.strip()
         stamp = time.strftime("%H:%M")
-        msg = "%s %s" % (stamp, command)
+        self._log_msg = "%s %s" % (stamp, command)
         if self.verbose:
-            print msg
+            print self._log_msg
         else:
-            sys.stdout.write(msg)
-
+            sys.stdout.write(self._log_msg)
         sys.stdout.flush()
+
         self.log_file.write("devo-batchbuild: %s\n" % command)
         self.log_file.flush()
 
         start_time = time.time()
-        self.reported_progress = False
         try:
             process = subprocess.Popen(command, cwd=cwd, env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, shell=True)
             while True:
@@ -82,13 +81,6 @@ class Runner(object):
             return
 
         percent = extract_progress(out)
-        if percent is None:
-            return
-
-        if not self.reported_progress:
-            # Do not overwrite current line
-            sys.stdout.write("\n")
+        if percent is not None:
+            sys.stdout.write("\r" + self._log_msg + " - " + percent)
             sys.stdout.flush()
-            self.reported_progress = True
-        sys.stdout.write("\r" + percent)
-        sys.stdout.flush()
