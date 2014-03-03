@@ -94,12 +94,30 @@ def select_modules_from_config(config_name, module_names, base_dict):
     return lst
 
 
-def apply_resume_from(lst, resume_from):
-    lst = list(itertools.dropwhile(lambda x: x.flat_get("name") != resume_from, lst))
-    if len(lst) == 0:
-        flog.error("Unknown module %s" % resume_from)
+def find_module_config(lst, name):
+    for idx, config in enumerate(lst):
+        if config.flat_get("name") == name:
+            return idx
+    return -1
+
+
+def apply_resume_from(lst, name):
+    idx = find_module_config(lst, name)
+    if idx == -1:
+        flog.error("Unknown module %s" % name)
         return None
-    return lst
+    return lst[idx:]
+
+
+def apply_resume_after(lst, name):
+    idx = find_module_config(lst, name)
+    if idx == -1:
+        flog.error("Unknown module %s" % name)
+        return None
+    if idx == len(lst) - 1:
+        flog.error("No module after %s" % name)
+        return None
+    return lst[idx + 1:]
 
 
 class BuildResult(object):
@@ -180,6 +198,10 @@ def main():
                       metavar="MODULE",
                       help="Resume build from MODULE")
 
+    parser.add_option("--resume-after", dest="resume_after", default=None,
+                      metavar="MODULE",
+                      help="Resume build after MODULE")
+
     parser.add_option("--refresh-build",
                       action="store_true", dest="refresh_build", default=False,
                       help="Delete build dir")
@@ -233,6 +255,8 @@ def main():
 
     if options.resume_from:
         module_configs = apply_resume_from(module_configs, options.resume_from)
+    if options.resume_after:
+        module_configs = apply_resume_after(module_configs, options.resume_after)
     if module_configs is None:
         return 1
 
