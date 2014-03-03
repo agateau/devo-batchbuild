@@ -35,6 +35,7 @@ class Runner(object):
         self.verbose = verbose
 
     def run(self, cwd, command, env=None, report_progress=False):
+        command = command.strip()
         stamp = time.strftime("%H:%M")
         msg = "%s %s" % (stamp, command)
         if self.verbose:
