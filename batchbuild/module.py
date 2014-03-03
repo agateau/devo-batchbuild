@@ -72,7 +72,7 @@ class Module(object):
             return
         opts = self.config.get("build-options", "")
         extra_opts = self.config.get("build-extra-options", "")
-        runner.run(self.build_dir, build + " " + opts + " " + extra_opts, env=self._getenv())
+        runner.run(self.build_dir, build + " " + opts + " " + extra_opts, env=self._getenv(), report_progress=True)
 
     def install(self, runner):
         install = self.config.get("install", "make install")

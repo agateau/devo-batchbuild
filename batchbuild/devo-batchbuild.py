@@ -110,10 +110,11 @@ class BuildResult(object):
 
 def do_build(module_configs, log_dir, options):
     result = BuildResult()
-    for config in module_configs:
+    nb_modules = len(module_configs)
+    for idx, config in enumerate(module_configs):
         name = config.flat_get("name")
         assert name
-        flog.h1(name)
+        flog.h1("%d/%d %s" % (idx + 1, nb_modules, name))
         module = Module(config)
         log_file_name = os.path.join(log_dir, name.replace("/", "_") + ".log")
         log_file = open(log_file_name, "w")
