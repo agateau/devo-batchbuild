@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 
 class BaseVcs(object):
@@ -41,18 +42,20 @@ class Git(BaseVcs):
 
     def switch_branch(self, runner):
         runner.run(self.module.src_dir, "git fetch")
-        # `git checkout -B <branch> origin/<branch>` switches to the branch if
-        # it exists, creates a tracking branch if it does not.
-        #
-        # This ensures a local tracking branch is created if it does not exist.
-        # This does not happen with `git checkout <branch>` when the repo has
-        # more than one remote with the same branch name.
-        cmd = "git checkout -B " + self.branch + " origin/" + self.branch
+        if self.branch in self._list_local_branches():
+            cmd = "git checkout "  + self.branch
+        else:
+            cmd = "git checkout -b " + self.branch + " origin/" + self.branch
         runner.run(self.module.src_dir, cmd)
 
     def update(self, runner):
         runner.run(self.module.src_dir, "git pull --rebase")
         runner.run(self.module.src_dir, "git submodule update")
+
+    def _list_local_branches(self):
+        output = subprocess.check_output(["git", "branch"], cwd=self.module.src_dir)
+        for line in output.splitlines():
+            yield line[2:]
 
 
 class KdeGit(Git):
