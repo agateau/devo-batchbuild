@@ -75,7 +75,7 @@ class Module(object):
         runner.run(self.build_dir, build + " " + opts + " " + extra_opts, env=self._getenv(), report_progress=True)
 
     def install(self, runner):
-        install = self.config.get("install", "make install")
+        install = self.config.get("install", "make install/fast")
         if not install:
             return
         opts = self.config.get("install-options", "")
