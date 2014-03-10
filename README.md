@@ -36,10 +36,13 @@ Available options:
 - branch: Branch to checkout (git only).
 - configure: Command to run to configure the source. Defaults to "devo-cmake".
 - configure-options: Options to pass to the `configure` command.
+- configure-extra-options: Options to pass to the `configure` command. Those can be defined on a module basis to extend `configure-options` instead of replacing it.
 - build: Command to run to build the source. Defaults to "make".
 - build-options: Options to pass to the `build` command.
-- auto: Whether this module should be build by default. Can be "true" or
-  "false". Defaults to "true".
+- build-extra-options: Options to pass to the `build` command. Those can be defined on a module basis to extend `build-options` instead of replacing it.
+- install: Command to run to install the compile code. Defaults to "make install/fast"
+- install-options: Options to pass to the install command.
+- install-extra-options: Options to pass to the `install` command. Those can be defined on a module basis to extend `install-options` instead of replacing it.
 
 `name` is the only mandatory option.
 
